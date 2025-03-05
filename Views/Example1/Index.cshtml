@@ -1,0 +1,39 @@
+﻿
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+
+    <div class="container-fluid w-100">
+        <div class="row w-100">
+            <form>
+                <div class="col-12 col-md-4 col-lg-2">
+                    <select class="form-select" style="width:100%;">
+                        <option value="1">opcion 1</option>
+                        <option value="2">opcion 2</option>
+                        <option value="3">opcion 3</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="row w-100">
+            <div class="col-12">
+                @Html.Partial("Tabla1")
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>

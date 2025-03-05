@@ -1,0 +1,107 @@
+﻿@model AssurantAIZ.Models.UsuarioCondusefModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+
+        .LabelInput {
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .MessageError {
+            color: red;
+        }
+    </style>
+    <link rel="stylesheet" href="~/Scripts/datatables.css" />
+</head>
+<body>
+    <div class="container">
+        <form method="post">
+            <div class="row">
+                <div class="col-12 col-md-4 col-lg-3">
+                    @Html.LabelFor(x => x.Key, new { @class = "LabelInput" })
+                    @Html.TextBoxFor(x => x.Key, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Key, null, new { @class = "MessageError" })
+                </div>
+                <div class="col-12 col-md-4 col-lg-3">
+                    @Html.LabelFor(x => x.UserName, new { @class = "LabelInput" })
+                    @Html.TextBoxFor(x => x.UserName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.UserName, null, new { @class = "MessageError" })
+                </div>
+                <div class="col-12 col-md-4 col-lg-3">
+                    @Html.LabelFor(x => x.Password, new { @class = "LabelInput" })
+                    @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Password, null, new { @class = "MessageError" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-3 offset-md-9 col-lg-2 offset-lg-10">
+                    <button type="submit" class="btn btn-primary w-100">Crear Usuario</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <table id="userTable" class="table-responsive table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Edad</th>
+                    <th>Casado</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript" src="~/Scripts/datatables.js"></script>
+    <script type="text/javascript">
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            $.fn.DataTable.ext.pager.numbers_length = 10;
+            let userTable = new DataTable(document.getElementById("userTable"), {
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "@Url.Action("Personas")",
+                    method: "GET",
+                    dataSrc: "data"
+                },
+
+                columns: [
+                    {
+                        data: 'Name'
+                    },
+                    {
+                        data: 'Age'
+                    },
+                    {
+                        data: 'IsMarried',
+                        render: function (data, type) {
+                            if (typeof data === 'boolean') {
+                                if (data) {
+                                    return '<input type="checkbox" checked /> '
+                                }
+                                return '<input type="checkbox" /> '
+                            } 
+                        }
+                    }
+                ]
+            }).on('page', function (e, settings) {
+                const pageInfo = settings.api.page.info();
+            })
+        })
+    </script>
+</body>
+</html>
