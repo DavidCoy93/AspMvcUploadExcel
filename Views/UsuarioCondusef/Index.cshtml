@@ -22,10 +22,17 @@
             color: red;
         }
     </style>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <link rel="stylesheet" href="~/Scripts/libs/jquery-ui-1.14.1/jquery-ui.theme.css" />
+    <link rel="stylesheet" href="~/Scripts/libs/jquery-ui-1.14.1/jquery-ui.css" />
+    <link rel="stylesheet" href="~/Scripts/libs/jquery-ui-1.14.1/jquery-ui.structure.css" />
+    <script type="text/javascript" src="~/Scripts/libs/jquery-ui-1.14.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="~/Scripts/datatables.css" />
+    <script type="text/javascript" src="~/Scripts/datatables.js"></script>
 </head>
 <body>
-    <div class="container">
+    @*<div class="container">
         <form method="post">
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-3">
@@ -50,6 +57,22 @@
                 </div>
             </div>
         </form>
+    </div>*@
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-3">
+                <input type="text" class="form-control datepicker-Form" id="inpDateStart"/>
+            </div>
+            <div class="col-12 col-md-3">
+                <input type="text" class="form-control datepicker-Form" id="inpDateEnd"/>
+            </div>
+            <div class="col-12 col-md-3">
+                <input type="text" class="form-control" id="inpUser"/>
+            </div>
+            <div class="col-12 col-md-3">
+                <button type="button" class="btn btn-primary" id="btnSearch">Buscar</button>
+            </div>
+        </div>
     </div>
     <div class="container">
         <table id="userTable" class="table-responsive table table-striped">
@@ -62,15 +85,19 @@
             </thead>
         </table>
     </div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    <script type="text/javascript" src="~/Scripts/datatables.js"></script>
+    
     <script type="text/javascript">
 
         document.addEventListener("DOMContentLoaded", function () {
 
-            $.fn.DataTable.ext.pager.numbers_length = 10;
+            $(".form-control.datepicker-Form").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "dd/mm/yy"
+            })
+
             let userTable = new DataTable(document.getElementById("userTable"), {
+                searching: false,
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -94,12 +121,40 @@
                                     return '<input type="checkbox" checked /> '
                                 }
                                 return '<input type="checkbox" /> '
-                            } 
+                            }
                         }
                     }
-                ]
-            }).on('page', function (e, settings) {
-                const pageInfo = settings.api.page.info();
+                ],
+                language:{
+                    "decimal": "",
+                    "emptyTable": "Informacion no disponible en la tabla",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    "infoEmpty": "Mostrando 0 a 0 de 0 registros",
+                    "infoFiltered": "(Filtrado de _MAX_ total registros)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ registros",
+                    "loadingRecords": "Cargar...",
+                    "processing": "",
+                    "search": "Buscar:",
+                    "zeroRecords": "No se encontraron registros",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                    "aria": {
+                        "orderable": "Ordenar por esta columna",
+                        "orderableReverse": "Ordenar en reversa esta columna"
+                    }
+                }
+            })
+
+            document.getElementById("btnSearch").addEventListener("click", function (evt) {
+                if (typeof userTable === 'object') {
+                    userTable.ajax.reload();
+                }
             })
         })
     </script>
